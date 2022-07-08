@@ -1,16 +1,26 @@
 #!/bin/sh
 
-# Configure docker for a non-root user
+GREEN="\033[32m"
+NC="\033[0m" # No Color
+
+echo "${GREEN}Configuring docker for a non-root user${NC}"
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker 
 
-# Create a cluster with 2 worker nodes
-k3d cluster create my-cluster --api-port 6443 -p 8080:80@loadbalancer --agents 2
+echo "\n${GREEN}Creating a cluster${NC}"
+k3d cluster create inception-of-things
 
-# Create two namespaces
+echo "\n${GREEN}Creating two namespaces${NC}"
 kubectl create namespace argocd
 kubectl create namespace dev
 
-# Install ArgoCD
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+echo "\n${GREEN}Installing Argo CD${NC}"
+kubectl apply -f ../confs/install.yaml -n argocd
+
+echo "\n${GREEN}Installing Argo CD CLI${NC}"
+sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo chmod +x /usr/local/bin/argocd
+
+echo "\n${GREEN}Exposing the Argo CD API server${NC}"
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
