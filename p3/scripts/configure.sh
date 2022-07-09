@@ -32,8 +32,5 @@ echo "username: admin, password: ${ARGOCD_PASSWORD}"
 echo "\n${GREEN}Creating wil-playground app${NC}"
 argocd app create wil-playground --repo https://github.com/dishults/dshults_argocd.git --path playground --dest-server https://kubernetes.default.svc --dest-namespace dev
 
-echo "${GREEN}Syncing wil-playground app${NC}"
-argocd app sync wil-playground
-
-echo "${GREEN}Starting port forwarding. The app is accessible at: http://localhost:8888 ${NC}"
-kubectl port-forward svc/wil-playground -n dev 8888:8888
+echo "${GREEN}Setting automated sync policty for future app changes${NC}"
+argocd app set wil-playground --sync-policy automated
