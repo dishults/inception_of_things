@@ -17,8 +17,14 @@ echo "\n${GREEN}Installing Argo CD${NC}"
 kubectl apply -f ../confs/install.yaml --wait
 
 echo "\n${GREEN}Waiting for Argo CD pods to finish initializing${NC}"
-for pod in $(kubectl get deploy -o name); do kubectl rollout status $pod -w; done
+for pod in $(kubectl get deploy -o name); do kubectl rollout status $pod; done
 
 echo "\n${GREEN}Logging in to Argo CD${NC}"
+NODE_PORT=$(kubectl get -o jsonpath="{.spec.ports[0].nodePort}" services argocd-server -n argocd)
+NODE_IP=$(kubectl get nodes -o jsonpath='{ $.items[*].status.addresses[?(@.type=="InternalIP")].address }')
+ARGOCD_SERVER=$NODE_IP:$NODE_PORT
 ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d; echo)
-argocd login --port-forward --plaintext --insecure --username admin --password $ARGOCD_PASSWORD
+argocd login $ARGOCD_SERVER --plaintext --insecure --username admin --password $ARGOCD_PASSWORD
+
+echo "\n${GREEN}You can access Argo CD API server at http://${ARGOCD_SERVER}${NC}"
+echo "username: admin, password: ${ARGOCD_PASSWORD}"
