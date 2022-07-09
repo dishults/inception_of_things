@@ -26,5 +26,14 @@ ARGOCD_SERVER=$NODE_IP:$NODE_PORT
 ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d; echo)
 argocd login $ARGOCD_SERVER --plaintext --insecure --username admin --password $ARGOCD_PASSWORD
 
-echo "\n${GREEN}You can access Argo CD API server at http://${ARGOCD_SERVER}${NC}"
+echo "\n${GREEN}You can access Argo CD API server at http://${ARGOCD_SERVER} ${NC}"
 echo "username: admin, password: ${ARGOCD_PASSWORD}"
+
+echo "\n${GREEN}Creating wil-playground app${NC}"
+argocd app create wil-playground --repo https://github.com/dishults/dshults_argocd.git --path playground --dest-server https://kubernetes.default.svc --dest-namespace dev
+
+echo "${GREEN}Syncing wil-playground app${NC}"
+argocd app sync wil-playground
+
+echo "${GREEN}Starting port forwarding. The app is accessible at: http://localhost:8888 ${NC}"
+kubectl port-forward svc/wil-playground -n dev 8888:8888
