@@ -12,4 +12,5 @@ spec:
     path: playground
     repoURL: https://github.com/dishults/dshults_argocd.git
   syncPolicy:
-    automated: {}
+    automated:
+      selfHeal: true
