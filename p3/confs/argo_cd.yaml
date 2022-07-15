@@ -9643,6 +9643,7 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 8080
+    nodePort: 30080 # Custom
     # Custom: removed https port
   selector:
     app.kubernetes.io/name: argocd-server
