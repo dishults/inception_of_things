@@ -23,5 +23,8 @@ echo "\n${GREEN}Logging in to Argo CD${NC}"
 ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)
 argocd login localhost:8080 --plaintext --insecure --username admin --password $ARGOCD_PASSWORD
 
+echo "\n${GREEN}Creating development project${NC}"
+kubectl apply -f ../confs/argo_cd_project.yaml --wait
+
 echo "\n${GREEN}Creating wil-playground app${NC}"
 kubectl apply -f ../confs/wil_playground.yaml --wait
