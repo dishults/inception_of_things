@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: playground
+    path: manifests
     repoURL: https://github.com/dishults/dshults_argocd.git
   syncPolicy:
     automated:
