@@ -28,3 +28,6 @@ kubectl apply -f ../confs/argo_cd_project.yaml --wait
 
 echo "\n${GREEN}Creating wil-playground app${NC}"
 kubectl apply -f ../confs/wil_playground.yaml --wait
+
+echo "\n${GREEN}Removing app's annotations${NC}"
+kubectl replace -f ../confs/wil_playground.yaml --wait
