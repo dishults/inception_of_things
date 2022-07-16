@@ -17,7 +17,7 @@ echo "\n${GREEN}Installing Argo CD${NC}"
 kubectl apply -f ../confs/argo_cd.yaml --wait
 
 echo "\n${GREEN}Waiting for Argo CD pods to finish initializing${NC}"
-for pod in $(kubectl get deploy -o name); do kubectl rollout status $pod; done
+for pod in $(kubectl get deploy -o name); do kubectl rollout status $pod --timeout 0; done
 
 echo "\n${GREEN}Logging in to Argo CD${NC}"
 ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d)

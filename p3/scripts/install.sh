@@ -28,6 +28,7 @@ source <(k3d completion bash)
 source <(argocd completion bash)" >>~/.bashrc
 
 echo "\n${GREEN}Configuring docker for a non-root user${NC}"
-sudo groupadd docker
 sudo usermod -aG docker $USER
-newgrp docker
+
+echo "\n${GREEN}Rebooting${NC}"
+sudo reboot
