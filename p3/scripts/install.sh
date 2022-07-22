@@ -31,4 +31,5 @@ echo "\n${GREEN}Configuring docker for a non-root user${NC}"
 sudo usermod -aG docker $USER
 
 echo "\n${GREEN}Rebooting${NC}"
+sleep 3
 sudo reboot
